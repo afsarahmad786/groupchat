@@ -295,7 +295,7 @@
         // get all groups
         axios
           .get(
-            "http://localhost:3000/groups",
+            "http://52.198.194.209:3000/groups",
 
             {
               withCredentials: true,
@@ -319,7 +319,7 @@
         function setgroups(item) {
           const sidebar = document.getElementById("sidebar");
           const anchor = document.createElement("a");
-          anchor.href = "http://localhost:3000/group?id=" + item.groupId;
+          anchor.href = "http://52.198.194.209:3000/group?id=" + item.groupId;
           //+","+ item.name;
           anchor.innerText = item.group.name;
           sidebar.append(anchor);
@@ -337,7 +337,7 @@
         // get All  in User
         axios
           .get(
-            "http://localhost:3000/users",
+            "http://52.198.194.209:3000/users",
 
             {
               withCredentials: true,
@@ -367,7 +367,7 @@
         // get Current Logged in User
         axios
           .get(
-            "http://localhost:3000/user",
+            "http://52.198.194.209:3000/user",
 
             {
               withCredentials: true,
@@ -386,7 +386,7 @@
 
         axios
           .get(
-            "http://localhost:3000/groupchat?id=" +
+            "http://52.198.194.209:3000/groupchat?id=" +
               document.URL.split("=").pop(),
 
             {
@@ -424,7 +424,7 @@
         document.getElementById("add-user").innerHTML = "";
         axios
           .get(
-            "http://localhost:3000/adduser?groupid=" +
+            "http://52.198.194.209:3000/adduser?groupid=" +
               document.URL.split("=").pop(),
 
             {
@@ -457,7 +457,7 @@
         let groupuser = $("#add-user").val();
         axios
           .post(
-            "http://localhost:3000/adduser?groupid=" +
+            "http://52.198.194.209:3000/adduser?groupid=" +
               document.URL.split("=").pop(),
             {
               ids: groupuser,
@@ -495,7 +495,7 @@
         // search participent and update in users
         axios
           .get(
-            "http://localhost:3000/participents?groupid=" +
+            "http://52.198.194.209:3000/participents?groupid=" +
               document.URL.split("=").pop() +
               "&filter=" +
               document.getElementById("searchname").value,
@@ -530,7 +530,7 @@
 
         axios
           .get(
-            "http://localhost:3000/participents?groupid=" +
+            "http://52.198.194.209:3000/participents?groupid=" +
               document.URL.split("=").pop() +
               "&filter=" +
               document.getElementById("searchname").value,
@@ -566,7 +566,7 @@
 
         if (item.is_admin) {
           const anchor = document.createElement("p");
-          //anchor.href = "http://localhost:3000/makeadmin?id=" + item.userId
+          //anchor.href = "http://52.198.194.209:3000/makeadmin?id=" + item.userId
           //+","+ item.name;
           anchor.innerText = "Admin";
           anchor.className = "ms-5 text-white bg-success p-1  rounded";
@@ -579,7 +579,7 @@
         if (currentuser["participant"]["is_admin"]) {
           const anchor = document.createElement("a");
           anchor.href =
-            "http://localhost:3000/makeadmin?id=" +
+            "http://52.198.194.209:3000/makeadmin?id=" +
             item.userId +
             "&groupId=" +
             item.groupId;
@@ -589,7 +589,7 @@
 
           const anchor2 = document.createElement("a");
           anchor2.href =
-            "http://localhost:3000/removeuser?id=" +
+            "http://52.198.194.209:3000/removeuser?id=" +
             item.userId +
             "&groupId=" +
             item.groupId;
@@ -610,7 +610,7 @@
         let groupuser = $("#group-user").val();
         axios
           .post(
-            "http://localhost:3000/create-group",
+            "http://52.198.194.209:3000/create-group",
             {
               name: name,
               ids: groupuser,
@@ -646,7 +646,7 @@
 
         axios
           .post(
-            "http://localhost:3000/chat/send",
+            "http://52.198.194.209:3000/chat/send",
             {
               message: message,
               groupid: groupid,
@@ -682,7 +682,7 @@
 
           axios
             .get(
-              "http://localhost:3000/chat/getmessage?id=" + id,
+              "http://52.198.194.209:3000/chat/getmessage?id=" + id,
 
               {
                 withCredentials: true,

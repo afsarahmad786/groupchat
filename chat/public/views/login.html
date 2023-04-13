@@ -31,7 +31,7 @@
         <div class="card p-4">
           <div class="card-body">
             <h5 class="card-title text-center">Register</h5>
-            <form action="localhost:3000/login" method="post">
+            <form action="52.198.194.209:3000/login" method="post">
               <div class="mb-3">
                 <label for="exampleFormControlInput1" class="form-label"
                   >Email address</label
@@ -63,7 +63,9 @@
             </form>
             <p class="pt-2">
               Not a register user?
-              <a href="http://localhost:3000/register" class="btn btn-primary"
+              <a
+                href="http://52.198.194.209:3000/register"
+                class="btn btn-primary"
                 >Register
               </a>
             </p>
@@ -101,7 +103,7 @@
 
         console.log(email, password);
         axios
-          .post("http://localhost:3000/login", {
+          .post("http://52.198.194.209:3000/login", {
             email: email,
             password: password,
           })
