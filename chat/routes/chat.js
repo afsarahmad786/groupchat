@@ -63,6 +63,11 @@ router.get(
 );
 
 router.get("/adduser", userAuthenticate.authenticate, chatcontroller.adduser);
+router.get(
+  "/addnewuser",
+  userAuthenticate.authenticate,
+  chatcontroller.adduser2
+);
 router.post(
   "/adduser",
   userAuthenticate.authenticate,

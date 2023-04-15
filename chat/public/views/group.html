@@ -230,6 +230,21 @@
         <div class="modal-content">
           <div class="modal-header">
             <h1 class="modal-title fs-5" id="staticBackdropLabel">Add User</h1>
+            <form class="d-flex" id="search-user-form">
+              <input
+                class="form-control mr-sm-2"
+                type="search"
+                name="search"
+                id="searchuser"
+              />
+              <button
+                class="btn btn-outline-success my-2 my-sm-0"
+                type="submit"
+                id="search-user"
+              >
+                Search
+              </button>
+            </form>
             <button
               type="button"
               class="btn-close"
@@ -422,6 +437,7 @@
         e.preventDefault();
         const add_user = document.getElementById("add-user");
         document.getElementById("add-user").innerHTML = "";
+        document.getElementById("search-user-form").reset();
         axios
           .get(
             "http://52.198.194.209:3000/adduser?groupid=" +
@@ -442,6 +458,44 @@
           });
       });
       function setadduser(item) {
+        const currentuser = JSON.parse(localStorage.getItem("currentuser"));
+        const add_user = document.getElementById("add-user");
+        const optons = document.createElement("option");
+        optons.value = item.id;
+        //+","+ item.name;
+        optons.innerText = item.name;
+        add_user.append(optons);
+      }
+      const search_user = document.getElementById("search-user");
+      search_user.addEventListener("click", function (e) {
+        e.preventDefault();
+        const search = document.getElementById("searchuser").value;
+
+        const add_user = document.getElementById("add-user");
+        document.getElementById("add-user").innerHTML = "";
+        axios
+          .get(
+            "http://52.198.194.209:3000/addnewuser?groupid=" +
+              document.URL.split("=").pop() +
+              "&search=" +
+              search,
+
+            {
+              withCredentials: true,
+            }
+          )
+          .then((response) => {
+            const messages = response.data["message"];
+            const data = response.data["data"];
+            const suc = response.data["success"];
+            data.forEach(setadduser2);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      });
+
+      function setadduser2(item) {
         const currentuser = JSON.parse(localStorage.getItem("currentuser"));
         const add_user = document.getElementById("add-user");
         const optons = document.createElement("option");
@@ -475,6 +529,9 @@
                 "user added to group";
 
               jQuery("#msg_send").show(0).delay(1000).hide(0);
+              setTimeout(() => {
+                location.reload();
+              }, 1000);
             } else {
               document.getElementById("msg_send").innerHTML = messages;
               jQuery("#msg_send").show(0).delay(1000).hide(0);
@@ -577,15 +634,17 @@
           anchor.append(itag);
         }
         if (currentuser["participant"]["is_admin"]) {
-          const anchor = document.createElement("a");
-          anchor.href =
-            "http://52.198.194.209:3000/makeadmin?id=" +
-            item.userId +
-            "&groupId=" +
-            item.groupId;
-          anchor.innerText = "Make Admin";
-          anchor.className = "ms-5 text-white btn-sm btn-dark";
-          div.append(anchor);
+          if (currentuser["id"] != item.userId) {
+            const anchor = document.createElement("a");
+            anchor.href =
+              "http://52.198.194.209:3000/makeadmin?id=" +
+              item.userId +
+              "&groupId=" +
+              item.groupId;
+            anchor.innerText = "Make Admin";
+            anchor.className = "ms-5 text-white btn-sm btn-dark";
+            div.append(anchor);
+          }
 
           const anchor2 = document.createElement("a");
           anchor2.href =
@@ -627,6 +686,9 @@
               document.getElementById("msg_send").innerHTML = messages;
 
               jQuery("#msg_send").show(0).delay(1000).hide(0);
+              setTimeout(() => {
+                location.reload();
+              }, 1000);
             } else {
               document.getElementById("msg_send").innerHTML = messages;
               jQuery("#msg_send").show(0).delay(1000).hide(0);

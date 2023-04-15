@@ -297,6 +297,8 @@ exports.removeuser = async (req, res, next) => {
 };
 exports.adduser = async (req, res, next) => {
   const groupId = req.query.groupid;
+  const filter = req.query.search;
+
   const allparticipent = await Participent.findAll({
     attributes: ["userId"],
     raw: true,
@@ -311,7 +313,68 @@ exports.adduser = async (req, res, next) => {
     attributes: ["id", "name"],
 
     where: {
-      id: { [Op.notIn]: allparticipent },
+      [Op.and]: [
+        {
+          id: {
+            [Op.notIn]: allparticipent,
+          },
+        },
+      ],
+    },
+  })
+    .then((result) => {
+      console.log("participent resit", result);
+      res.json({
+        message: "Participent Listing",
+        success: true,
+        data: result,
+      });
+    })
+    .catch((err) => console.log(err));
+};
+
+exports.adduser2 = async (req, res, next) => {
+  const groupId = req.query.groupid;
+  const filter = req.query.search;
+
+  const allparticipent = await Participent.findAll({
+    attributes: ["userId"],
+    raw: true,
+
+    where: {
+      [Op.and]: [{ groupId: groupId }],
+    },
+  })
+    .then((results) => results.map((result) => result.userId))
+    .catch((err) => console.log(err));
+  User.findAll({
+    attributes: ["id", "name"],
+
+    where: {
+      [Op.and]: [
+        {
+          id: {
+            [Op.notIn]: allparticipent,
+          },
+        },
+      ],
+      [Op.or]: [
+        {
+          name: {
+            [Op.like]: filter + "%",
+          },
+        },
+        {
+          email: {
+            [Op.like]: filter + "%",
+          },
+        },
+        {
+          phone: {
+            [Op.like]: filter + "%",
+          },
+        },
+      ],
     },
   })
     .then((result) => {
@@ -327,7 +390,6 @@ exports.adduser = async (req, res, next) => {
 
 exports.addparticipent = async (req, res, next) => {
   const { ids } = req.body;
-  console.log("idssssssssssssssss", ids);
   const groupId = req.query.groupid;
 
   for (const id of ids) {
