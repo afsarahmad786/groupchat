@@ -13,6 +13,9 @@ const path = require("path");
 const Group = require("./models/group");
 const Participant = require("./models/participants");
 const app = express();
+
+const server = require("http").createServer(app);
+const io = require("socket.io")(server);
 app.use(bodyParser.json());
 app.use(cookieParser());
 
@@ -35,14 +38,21 @@ Group.belongsTo(User);
 Participant.belongsTo(Group);
 Participant.belongsTo(User);
 // Participant.belongsTo(User, { foreignKey: "UserId", as: "UserData" });
-
+io.on("connection", (socket) => {
+  socket.on("send-message", (message) => {
+    socket.broadcast.emit("recieve-message", message);
+  });
+  socket.on("sender-message", (message, room) => {
+    socket.emit("reciever-message", message, room);
+  });
+});
 const port = 3000;
 User.hasMany;
 sequelize
   // .sync({ force: true })
   .sync()
   .then((result) => {
-    app.listen(process.env.PORT || port, () => {
+    server.listen(process.env.PORT || port, () => {
       console.log(`Server running at http://${port} \n`);
     });
   })
