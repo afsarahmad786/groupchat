@@ -6,7 +6,7 @@ const Participent = require("../models/participants");
 const jwt = require("jsonwebtoken");
 const path = require("path");
 const { Op } = require("sequelize");
-const S3Services = require("../services/S3services");
+const S3Services = require("../service/s3service");
 
 exports.sendmessage = async (req, res, next) => {
   const { message, groupid } = req.body;
