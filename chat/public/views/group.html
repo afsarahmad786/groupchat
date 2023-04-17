@@ -282,13 +282,21 @@
     </div>
     <div class="container bg-info fixed-bottom w-50">
       <div class="card bg-info">
-        <form method="post">
+        <form method="post" enctype="multipart/form-data" id="myform">
           <div class="card-body">
+            <div class="input-group mb-3">
+              <input
+                type="file"
+                class="form-control"
+                id="fileimage"
+                name="image"
+              />
+            </div>
             <!-- <div class="mb-3"> -->
             <label for="info">Please enter your message</label>
             <input type="text" class="form-control" id="message" />
             <!-- </div> -->
-            <button type="submit" class="btn btn-dark" id="msg">Submit</button>
+            <button type="submit" class="btn btn-dark" id="msg">Send</button>
           </div>
         </form>
       </div>
@@ -422,8 +430,11 @@
           )
           .then((response) => {
             const messages = response.data["message"];
-            const data = response.data["data"];
-            console.log("chatdata", data);
+            let data = response.data["data"];
+            if (data.length > 10) {
+              data = [...data.slice(-10)];
+            }
+            console.log("chatdata", data.length);
             const suc = response.data["success"];
             localStorage.setItem("chat", JSON.stringify(data));
 
@@ -712,61 +723,240 @@
       });
       // socket.emit("sender-message", message, socket.id);
 
-      socket.on("recieve-message", (message, room) => {
+      socket.on("recieve-message", (message, filename) => {
         const currentuser = JSON.parse(localStorage.getItem("currentuser"));
         const chat_container = document.getElementById("chat-container");
         const para = document.createElement("p");
         para.className = "card-text pt2 pb-2 ps-1";
         para.innerText = message;
         chat_container.append(para);
+        console.log("filetype", filename);
+
+        if (filename) {
+          const img = document.createElement("img");
+          img.className = "imgname card-text text-custom pt2 pb-2 ps-1 ";
+          img.setAttribute("height", "50px");
+          chat_container.append(img);
+          var arrayBufferView = new Uint8Array(filename);
+          var blob = new Blob([arrayBufferView], { type: "image/jpeg" });
+          var urlCreator = window.URL || window.webkitURL;
+          var imageUrl = urlCreator.createObjectURL(blob);
+          img.setAttribute("src", imageUrl);
+
+          /*  var arrayBuffer = filename.data;
+        var bytes = new Uint8Array(arrayBuffer);
+        const img = document.createElement("img");
+        img.className = "imgname card-text text-custom pt2 pb-2 ps-1 ";
+        img.setAttribute('src','data:image/png;base64,'+encode(bytes))
+        img.setAttribute('height','50px')
+        chat_container.append(img);
+        function toBase64(arr) {
+          //arr = new Uint8Array(arr) if it's an ArrayBuffer
+          return btoa(
+             arr.reduce((data, byte) => data + String.fromCharCode(byte), '')
+          );
+       }
+       
+        var arrayBuffer = filename.data;
+        var bytes = new Uint8Array(arrayBuffer);
+        var blob = new Blob([bytes.buffer]);
+        const img = document.createElement("img");
+        img.className = "imgname card-text text-custom pt2 pb-2 ps-1 ";
+        img.setAttribute('height','50px')
+        chat_container.append(img);
+        urlObject = URL.createObjectURL(new Blob([bytes]));
+
+        var reader = new FileReader();
+        reader.onload = function(e) {
+        img.setAttribute('src',`data:image/png;base64,${toBase64( filename)}`)
+
+            //image.src = e.target.result;
+        };
+
+        reader.readAsDataURL(blob);
+        */
+        }
       });
 
       const res = document.getElementById("msg");
       res.addEventListener("click", function (e) {
         e.preventDefault();
-
         const message = document.getElementById("message").value;
+        //const image = document.getElementById("fileimage").value;
+        var imagefile = document.querySelector("#fileimage");
         const groupid = document.URL.split("=").pop();
-
-        axios
+        /*
+         axios
           .post(
             "http://52.198.194.209:3000/chat/send",
             {
               message: message,
               groupid: groupid,
+              image:e.target.files
+            },{
+              headers: {
+                'Content-Type': 'multipart/form-data'
+              }
             },
             {
               withCredentials: true,
             }
-          )
-          .then((response) => {
-            const messages = response.data["message"];
-            const suc = response.data["success"];
-            if (suc == true) {
-              document.getElementById("msg_send").innerHTML = messages;
-
-              jQuery("#msg_send").show(0).delay(1000).hide(0);
-              socket.emit("send-message", message);
-              const currentuser = JSON.parse(
-                localStorage.getItem("currentuser")
-              );
-              const chat_container = document.getElementById("chat-container");
-              const para = document.createElement("p");
-              para.className = "card-text text-custom pt2 pb-2 ps-1";
-              para.innerText = message;
-              chat_container.append(para);
-
-              // setTimeout(() => {
-              //   location.reload();
-              // }, 1000);
-            } else {
-              document.getElementById("msg_send").innerHTML = messages;
-              jQuery("#msg_send").show(0).delay(5000).hide(0);
-            }
+          ) */
+        if (imagefile.files[0]) {
+          let data = new FormData();
+          data.append("message", message);
+          data.append("image", imagefile.files[0]);
+          data.append("groupid", groupid);
+          axios({
+            method: "post",
+            url: "http://52.198.194.209:3000/chat/sendboth",
+            data: data,
+            headers: { "Content-Type": "multipart/form-data" },
+            withCredentials: true,
           })
-          .catch((err) => {
-            console.log(err);
-          });
+            .then((response) => {
+              const messages = response.data["message"];
+              const suc = response.data["success"];
+              if (suc == true) {
+                document.getElementById("msg_send").innerHTML = messages;
+
+                jQuery("#msg_send").show(0).delay(1000).hide(0);
+                socket.emit("send-message", message, imagefile.files[0]);
+                const currentuser = JSON.parse(
+                  localStorage.getItem("currentuser")
+                );
+                const chat_container =
+                  document.getElementById("chat-container");
+                /*
+              if(!imagefile.files[0]==='' || !imagefile.files[0]===undefined){
+                reader.readAsDataURL(file);
+           
+              } */
+                const para = document.createElement("p");
+                para.className = "card-text text-custom pt2 pb-2 ps-1";
+                para.innerText = message;
+                chat_container.append(para);
+                if (imagefile.files[0]) {
+                  previewFile(imagefile.files[0]);
+                }
+                function previewFile(imagename) {
+                  const chat_container =
+                    document.getElementById("chat-container");
+
+                  const img = document.createElement("img");
+                  img.className =
+                    "imgname card-text text-custom pt2 pb-2 ps-1 ";
+                  chat_container.append(img);
+
+                  const preview = document.querySelector("imgname");
+
+                  const file =
+                    document.querySelector("input[type=file]").files[0];
+                  //   const file=imagename
+                  const reader = new FileReader();
+
+                  reader.addEventListener(
+                    "load",
+                    function () {
+                      img.setAttribute("src", reader.result);
+                      img.setAttribute("height", "50px");
+                      //preview.src= reader.result
+                    },
+                    false
+                  );
+                  if (file) {
+                    reader.readAsDataURL(file);
+                  }
+                }
+                // setTimeout(() => {
+                //   location.reload();
+                // }, 1000);
+              } else {
+                document.getElementById("msg_send").innerHTML = messages;
+                jQuery("#msg_send").show(0).delay(5000).hide(0);
+              }
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        } else {
+          let data = new FormData();
+          data.append("message", message);
+          // data.append('image', imagefile.files[0])
+          data.append("groupid", groupid);
+          axios({
+            method: "post",
+            url: "http://52.198.194.209:3000/chat/send",
+            data: data,
+            // headers :  { 'Content-Type': 'multipart/form-data'},
+            withCredentials: true,
+          })
+            .then((response) => {
+              const messages = response.data["message"];
+              const suc = response.data["success"];
+              if (suc == true) {
+                document.getElementById("msg_send").innerHTML = messages;
+
+                jQuery("#msg_send").show(0).delay(1000).hide(0);
+                socket.emit("send-message", message, imagefile.files[0]);
+                const currentuser = JSON.parse(
+                  localStorage.getItem("currentuser")
+                );
+                const chat_container =
+                  document.getElementById("chat-container");
+                /*
+              if(!imagefile.files[0]==='' || !imagefile.files[0]===undefined){
+                reader.readAsDataURL(file);
+           
+              } */
+                const para = document.createElement("p");
+                para.className = "card-text text-custom pt2 pb-2 ps-1";
+                para.innerText = message;
+                chat_container.append(para);
+                if (imagefile.files[0]) {
+                  previewFile(imagefile.files[0]);
+                }
+                function previewFile(imagename) {
+                  const chat_container =
+                    document.getElementById("chat-container");
+
+                  const img = document.createElement("img");
+                  img.className =
+                    "imgname card-text text-custom pt2 pb-2 ps-1 ";
+                  chat_container.append(img);
+
+                  const preview = document.querySelector("imgname");
+
+                  const file =
+                    document.querySelector("input[type=file]").files[0];
+                  //   const file=imagename
+                  const reader = new FileReader();
+
+                  reader.addEventListener(
+                    "load",
+                    function () {
+                      img.setAttribute("src", reader.result);
+                      img.setAttribute("height", "50px");
+                      //preview.src= reader.result
+                    },
+                    false
+                  );
+                  if (file) {
+                    reader.readAsDataURL(file);
+                  }
+                }
+                // setTimeout(() => {
+                //   location.reload();
+                // }, 1000);
+              } else {
+                document.getElementById("msg_send").innerHTML = messages;
+                jQuery("#msg_send").show(0).delay(5000).hide(0);
+              }
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        }
       });
 
       function updateitems(data) {
@@ -812,6 +1002,20 @@
         }
         para.innerText = item.message;
         chat_container.append(para);
+        if (item.image) {
+          const img = document.createElement("img");
+          if (currentuser.id === item.userId) {
+            para.className = "card-text text-custom pt2 pb-2 ps-1";
+          } else {
+            para.className = "card-text  pt2 pb-2 ps-1";
+          }
+          img.setAttribute("height", "30px");
+          img.setAttribute("width", "30px");
+          //img.height='30px'
+          //img.width='30px'
+          img.src = "http://52.198.194.209:3000/" + item.image;
+          chat_container.append(img);
+        }
       }
     </script>
 

@@ -12,12 +12,22 @@ var cors = require("cors");
 const path = require("path");
 const Group = require("./models/group");
 const Participant = require("./models/participants");
+const fileUpload = require("express-fileupload");
+
 const app = express();
 
 const server = require("http").createServer(app);
 const io = require("socket.io")(server);
 app.use(bodyParser.json());
 app.use(cookieParser());
+app.use(
+  fileUpload({
+    limits: {
+      fileSize: 2000000, // Around 10MB
+    },
+    abortOnLimit: true,
+  })
+);
 
 app.use(cors());
 
@@ -27,6 +37,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.static(path.join(__dirname, "js")));
+app.use(express.static("public/upload"));
 
 User.hasMany(Chat);
 User.hasOne(Participant);
@@ -39,8 +50,8 @@ Participant.belongsTo(Group);
 Participant.belongsTo(User);
 // Participant.belongsTo(User, { foreignKey: "UserId", as: "UserData" });
 io.on("connection", (socket) => {
-  socket.on("send-message", (message) => {
-    socket.broadcast.emit("recieve-message", message);
+  socket.on("send-message", (message, file) => {
+    socket.broadcast.emit("recieve-message", message, file);
   });
   socket.on("sender-message", (message, room) => {
     socket.emit("reciever-message", message, room);

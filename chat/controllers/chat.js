@@ -8,11 +8,39 @@ const { Op } = require("sequelize");
 
 exports.sendmessage = async (req, res, next) => {
   const { message, groupid } = req.body;
+
   Chat.create({
     message: message,
     is_read: 0,
     userId: req.user.id,
     groupId: groupid,
+    image: "",
+  })
+    .then((result) => {
+      res.json({
+        message: "Message Send Successfully",
+        success: true,
+        data: result,
+      });
+    })
+    .catch((err) => {
+      res.json(err);
+    });
+};
+
+exports.sendmessageboth = async (req, res, next) => {
+  const { message, groupid } = req.body;
+  const { image } = req.files;
+  if (image) {
+    image.mv(path.join(__dirname, "../public/") + "upload/" + image.name);
+  }
+
+  Chat.create({
+    message: message,
+    is_read: 0,
+    userId: req.user.id,
+    groupId: groupid,
+    image: image ? image.name : "",
   })
     .then((result) => {
       res.json({

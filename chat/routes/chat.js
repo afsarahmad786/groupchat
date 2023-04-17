@@ -12,6 +12,11 @@ router.post(
   userAuthenticate.authenticate,
   chatcontroller.sendmessage
 );
+router.post(
+  "/chat/sendboth",
+  userAuthenticate.authenticate,
+  chatcontroller.sendmessageboth
+);
 
 router.get(
   "/chat/send",

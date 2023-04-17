@@ -9,10 +9,10 @@ const Chat = sequelize.define("chat", {
     allowNull: false,
     primaryKey: true,
   },
-  // reciever_id: {
-  //   type: Sequelize.INTEGER,
-  //   allowNull: false,
-  // },
+  image: {
+    type: Sequelize.STRING,
+    allowNull: true,
+  },
   message: Sequelize.STRING,
   is_read: Sequelize.INTEGER,
 });
