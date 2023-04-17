@@ -2,7 +2,7 @@ const Sequelize = require("sequelize");
 
 const sequelize = require("../util/database");
 
-const Chat = sequelize.define("chat", {
+const Image = sequelize.define("image", {
   id: {
     type: Sequelize.INTEGER,
     autoIncrement: true,
@@ -13,12 +13,8 @@ const Chat = sequelize.define("chat", {
     type: Sequelize.STRING,
     allowNull: true,
   },
-  imageId: {
-    type: Sequelize.INTEGER,
-    allowNull: true,
-  },
-  message: Sequelize.STRING,
-  is_read: Sequelize.INTEGER,
+
+  url: Sequelize.STRING,
 });
 
-module.exports = Chat;
+module.exports = Image;

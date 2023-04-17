@@ -6,6 +6,7 @@ dotenv.config();
 const sequelize = require("./util/database");
 const User = require("./models/user");
 const Chat = require("./models/chat");
+const Image = require("./models/image");
 const UserRoutes = require("./routes/user");
 const ChatRoutes = require("./routes/chat");
 var cors = require("cors");
@@ -48,7 +49,11 @@ Group.belongsTo(User);
 
 Participant.belongsTo(Group);
 Participant.belongsTo(User);
+
+// Image.belongsTo(Chat);
 // Participant.belongsTo(User, { foreignKey: "UserId", as: "UserData" });
+Chat.belongsTo(Image, { foreignKey: "imageId", as: "ImageData" });
+
 io.on("connection", (socket) => {
   socket.on("send-message", (message, file) => {
     socket.broadcast.emit("recieve-message", message, file);

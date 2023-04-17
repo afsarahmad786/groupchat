@@ -1,10 +1,12 @@
 const Chat = require("../models/chat");
+const Image = require("../models/image");
 const User = require("../models/user");
 const Group = require("../models/group");
 const Participent = require("../models/participants");
 const jwt = require("jsonwebtoken");
 const path = require("path");
 const { Op } = require("sequelize");
+const S3Services = require("../services/S3services");
 
 exports.sendmessage = async (req, res, next) => {
   const { message, groupid } = req.body;
@@ -31,16 +33,32 @@ exports.sendmessage = async (req, res, next) => {
 exports.sendmessageboth = async (req, res, next) => {
   const { message, groupid } = req.body;
   const { image } = req.files;
-  if (image) {
-    image.mv(path.join(__dirname, "../public/") + "upload/" + image.name);
-  }
+  const userId = req.user.id;
+
+  // const filenames = `chatimagees/${new Date()}/${image.name}`;
+  const file = req.files.file;
+  // const fileName = req.files.file.name;
+  const fileUrl = await S3Services.uploadToS3(image.data, image.name);
+  const imageid = await Image.create({
+    url: fileUrl,
+    image: image.name,
+  })
+    .then((result) => {
+      return result;
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+
+  //  image.mv(path.join(__dirname, "../public/") + "upload/" + image.name);
 
   Chat.create({
     message: message,
     is_read: 0,
     userId: req.user.id,
     groupId: groupid,
-    image: image ? image.name : "",
+    image: fileUrl,
+    imageId: imageid["id"],
   })
     .then((result) => {
       res.json({
@@ -308,20 +326,20 @@ exports.removeuser = async (req, res, next) => {
     },
   })
     .then((result) => {
-      res.redirect("back");
+      // res.redirect('back');
     })
     .catch((err) => console.log(err));
 
-  // Chat.destroy({
-  //   where: {
-  //     userId: id,
-  //     groupId: groupId,
-  //   },
-  // })
-  //   .then((result) => {
-  //     res.redirect("back");
-  //   })
-  //   .catch((err) => console.log(err));
+  Chat.destroy({
+    where: {
+      userId: id,
+      groupId: groupId,
+    },
+  })
+    .then((result) => {
+      res.redirect("back");
+    })
+    .catch((err) => console.log(err));
 };
 exports.adduser = async (req, res, next) => {
   const groupId = req.query.groupid;

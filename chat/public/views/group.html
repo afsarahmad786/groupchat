@@ -871,6 +871,7 @@
                 // setTimeout(() => {
                 //   location.reload();
                 // }, 1000);
+                document.getElementById("myform").reset();
               } else {
                 document.getElementById("msg_send").innerHTML = messages;
                 jQuery("#msg_send").show(0).delay(5000).hide(0);
@@ -1013,7 +1014,7 @@
           img.setAttribute("width", "30px");
           //img.height='30px'
           //img.width='30px'
-          img.src = "http://52.198.194.209:3000/" + item.image;
+          img.src = item.image;
           chat_container.append(img);
         }
       }
