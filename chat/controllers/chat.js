@@ -308,20 +308,20 @@ exports.removeuser = async (req, res, next) => {
     },
   })
     .then((result) => {
-      // res.redirect('back');
-    })
-    .catch((err) => console.log(err));
-
-  Chat.destroy({
-    where: {
-      userId: id,
-      groupId: groupId,
-    },
-  })
-    .then((result) => {
       res.redirect("back");
     })
     .catch((err) => console.log(err));
+
+  // Chat.destroy({
+  //   where: {
+  //     userId: id,
+  //     groupId: groupId,
+  //   },
+  // })
+  //   .then((result) => {
+  //     res.redirect("back");
+  //   })
+  //   .catch((err) => console.log(err));
 };
 exports.adduser = async (req, res, next) => {
   const groupId = req.query.groupid;
