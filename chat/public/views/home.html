@@ -206,7 +206,7 @@
         // get all groups
         axios
           .get(
-            "http://52.198.194.209:3000/groups",
+            "http://54.86.42.180:3000/groups",
 
             {
               withCredentials: true,
@@ -230,7 +230,7 @@
         function setgroups(item) {
           const sidebar = document.getElementById("sidebar");
           const anchor = document.createElement("a");
-          anchor.href = "http://52.198.194.209:3000/group?id=" + item.groupId;
+          anchor.href = "http://54.86.42.180:3000/group?id=" + item.groupId;
           //+","+ item.name;
           anchor.innerText = item.group.name;
           sidebar.append(anchor);
@@ -249,7 +249,7 @@
 
         axios
           .get(
-            "http://52.198.194.209:3000/users",
+            "http://54.86.42.180:3000/users",
 
             {
               withCredentials: true,
@@ -279,7 +279,7 @@
         // get Current Logged in User
         axios
           .get(
-            "http://52.198.194.209:3000/user",
+            "http://54.86.42.180:3000/user",
 
             {
               withCredentials: true,
@@ -297,7 +297,7 @@
 
         axios
           .get(
-            "http://52.198.194.209:3000/chat/get",
+            "http://54.86.42.180:3000/chat/get",
 
             {
               withCredentials: true,
@@ -337,7 +337,7 @@
         let groupuser = $("#group-user").val();
         axios
           .post(
-            "http://52.198.194.209:3000/create-group",
+            "http://54.86.42.180:3000/create-group",
             {
               name: name,
               ids: groupuser,
@@ -373,7 +373,7 @@
 
         axios
           .post(
-            "http://52.198.194.209:3000/chat/send",
+            "http://54.86.42.180:3000/chat/send",
             {
               message: message,
               // reciever_id: reciever_id,
@@ -409,7 +409,7 @@
 
           axios
             .get(
-              "http://52.198.194.209:3000/chat/getmessage?id=" + id,
+              "http://54.86.42.180:3000/chat/getmessage?id=" + id,
 
               {
                 withCredentials: true,
