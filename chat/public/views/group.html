@@ -252,7 +252,13 @@
       style="margin-left: 203px"
     >
       <div class="container-fluid">
-        <p class="navbar-brand fs-3">Chat App</p>
+        <a
+          href="/chat/send"
+          class="navbar-brand fs-3 mt-1"
+          style="text-decoration: none"
+        >
+          <p>Chat App</p>
+        </a>
         <button
           class="navbar-toggler"
           type="button"
@@ -278,7 +284,7 @@
                 data-bs-toggle="modal"
                 data-bs-target="#staticBackdrop"
                 id="add-user-to-modal"
-                style="display: none"
+                style="display: none !important"
               >
                 Add User
               </button>
@@ -310,8 +316,8 @@
     <div class="row">
       <div class="col-lg-9">
         <div class="d-flex justify-content-center">
-          <div class="card w-50">
-            <div class="card-body p-0" id="chat-container">
+          <div class="card w-50 mt-1">
+            <div class="card-body" id="chat-container">
               <!-- <h5 class="card-title text-center">Chat App</h5> -->
             </div>
           </div>
@@ -501,6 +507,7 @@
           anchor.href = "http://52.198.194.209:3000/group?id=" + item.groupId;
           //+","+ item.name;
           anchor.innerText = item.group.name;
+          anchor.id = "101" + item.group.id;
           anchor.className = "ps-0";
           sidebar.append(anchor);
         }
@@ -802,7 +809,7 @@
           anchor.append(itag);
         }
         if (currentuser["participant"]["is_admin"]) {
-          if (currentuser["id"] != item.userId) {
+          if (currentuser["id"] != item.userId && item.is_admin !== true) {
             const anchor = document.createElement("a");
             anchor.href =
               "http://52.198.194.209:3000/makeadmin?id=" +
@@ -1138,6 +1145,8 @@
 
       function chatrendering(item) {
         // console.log(item);
+        var elem = document.getElementById("101" + item.groupId);
+        elem.setAttribute("class", "active");
         const currentuser = JSON.parse(localStorage.getItem("currentuser"));
         const chat_container = document.getElementById("chat-container");
         const para = document.createElement("p");
