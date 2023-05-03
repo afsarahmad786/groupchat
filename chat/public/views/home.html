@@ -74,6 +74,16 @@
         background-color: #33aa6d;
         color: white;
       }
+      .bg-success2 {
+        background-color: #3ab7a7 !important;
+      }
+      .navbar-success {
+        background-color: #3ab7a7;
+      }
+      a:hover {
+        background-color: #3ab7a7 !important;
+        color: white !important;
+      }
     </style>
 
     <link
@@ -87,8 +97,8 @@
   </head>
 
   <body>
-    <div class="sidebar" id="sidebar">
-      <h5 class="success">Group Name</h5>
+    <div class="sidebar text-center mt-1" id="sidebar">
+      <h5>Group Name</h5>
     </div>
     <div
       class="success-message alert alert-success"
@@ -101,14 +111,6 @@
       style="display: none"
     ></div>
     <!-- Button trigger modal -->
-    <button
-      type="button"
-      class="btn btn-dark float-end mt-1 me-1"
-      data-bs-toggle="modal"
-      data-bs-target="#exampleModal"
-    >
-      Create Group
-    </button>
 
     <!-- Modal -->
     <div
@@ -138,11 +140,7 @@
               <div class="mb-3">
                 <label for="info">Select User</label>
 
-                <select class="form-select" id="group-user" multiple>
-                  <!-- <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="3">Three</option> -->
-                </select>
+                <select class="form-select" id="group-user" multiple></select>
               </div>
             </form>
           </div>
@@ -161,27 +159,62 @@
         </div>
       </div>
     </div>
+    <nav
+      class="navbar navbar-success bg-success2 navbar-expand-lg"
+      style="margin-left: 203px"
+    >
+      <div class="container-fluid">
+        <!-- <p class="navbar-brand ms-5 mt-3 text-white" href="#">Groups</p> -->
+        <div class="justify-content-center">
+          <p class="navbar-brand mt-3 text-white text-center" href="#">Chats</p>
+        </div>
+        <div class="d-flex flex-row-reverse">
+          <button
+            type="button"
+            class="btn btn-dark"
+            data-bs-toggle="modal"
+            data-bs-target="#exampleModal"
+          >
+            Create Group
+          </button>
+        </div>
+      </div>
+    </nav>
 
-    <div class="d-flex justify-content-center">
+    <div class="container mt-5">
+      <h5 class="text-center text-dark">Groups That You Already Joined</h5>
+      <div class="row justify-content-md-center mt-1" id="main-body">
+        <!-- <div class="col col-lg-2">
+         <h1>Helllo</h1>
+        </div>
+        <div class="col col-lg-2">
+          <h1>Helllo</h1>
+        </div>
+        <div class="col col-lg-2">
+          <h1>Helllo</h1>
+        </div> -->
+      </div>
+    </div>
+
+    <!-- <div class="d-flex justify-content-center">
       <div class="card w-50">
         <div class="card-body" id="chat-container">
           <h5 class="card-title text-center">Chat App</h5>
         </div>
       </div>
-    </div>
-    <div class="container bg-info fixed-bottom w-50">
+    </div> -->
+    <!-- <div class="container bg-info fixed-bottom w-50">
       <div class="card bg-info">
         <form method="post">
           <div class="card-body">
-            <!-- <div class="mb-3"> -->
             <label for="info">Please enter your message</label>
             <input type="text" class="form-control" id="message" />
-            <!-- </div> -->
             <button type="submit" class="btn btn-dark" id="msg">Submit</button>
           </div>
         </form>
       </div>
-    </div>
+    </div> -->
+
     <script
       src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"
       type="text/javascript"
@@ -219,6 +252,7 @@
             console.log("group data", data);
             if (data && data.length) {
               data.forEach(setgroups);
+              data.forEach(setgroups2);
             } else {
               nogroup();
             }
@@ -233,16 +267,34 @@
           anchor.href = "http://52.198.194.209:3000/group?id=" + item.groupId;
           //+","+ item.name;
           anchor.innerText = item.group.name;
+          anchor.className = "ps-0";
           sidebar.append(anchor);
         }
 
+        function setgroups2(item) {
+          const mainbody = document.getElementById("main-body");
+          const col = document.createElement("div");
+          col.className = "col col-lg-2";
+          mainbody.append(col);
+
+          const anchor = document.createElement("a");
+          anchor.href = "http://52.198.194.209:3000/group?id=" + item.groupId;
+          //+","+ item.name;
+          anchor.innerText = item.group.name;
+          anchor.className = "text-dark fs-3";
+          col.append(anchor);
+        }
+
         function nogroup() {
-          const sidebar = document.getElementById("sidebar");
+          const mainbody = document.getElementById("main-body");
+          const col = document.createElement("div");
+          col.className = "col col-lg-3";
+          mainbody.append(col);
           const norecord = document.createElement("p");
           //+","+ item.name;
-          norecord.className = "text-dark";
-          norecord.innerText = "No Group Found";
-          sidebar.append(norecord);
+          norecord.className = "text-dark  fs-3";
+          norecord.innerText = "No Record Found";
+          col.append(norecord);
         }
 
         // get All  in User
@@ -354,6 +406,7 @@
               document.getElementById("msg_send").innerHTML = messages;
 
               jQuery("#msg_send").show(0).delay(1000).hide(0);
+              location.reload();
             } else {
               document.getElementById("msg_send").innerHTML = messages;
               jQuery("#msg_send").show(0).delay(1000).hide(0);

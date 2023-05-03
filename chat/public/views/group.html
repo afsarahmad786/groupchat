@@ -74,6 +74,65 @@
         background-color: #33aa6d;
         color: white;
       }
+      .bg-success2 {
+        background-color: #3ab7a7 !important;
+      }
+      .navbar-success {
+        background-color: #3ab7a7;
+      }
+      a:hover {
+        background-color: #3ab7a7 !important;
+        color: white !important;
+      }
+      button:hover {
+        background-color: #3ab7a7 !important;
+        color: white !important;
+      }
+      .bg-info2 {
+        background-color: #f1f1f1 !important;
+      }
+      .drop-container {
+        position: relative;
+        display: flex;
+        gap: 10px;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100px;
+        padding: 20px;
+        border-radius: 10px;
+        border: 2px dashed #555;
+        color: #444;
+        cursor: pointer;
+        transition: background 0.2s ease-in-out, border 0.2s ease-in-out;
+      }
+
+      .drop-container:hover {
+        background: #eee;
+        border-color: #111;
+      }
+
+      .drop-container:hover .drop-title {
+        color: #222;
+      }
+
+      .drop-title {
+        color: #444;
+        font-size: 20px;
+        font-weight: bold;
+        text-align: center;
+        transition: color 0.2s ease-in-out;
+      }
+      @media (min-width: 1400px) {
+        .container,
+        .container-lg,
+        .container-md,
+        .container-sm,
+        .container-xl,
+        .container-xxl {
+          max-width: 1511px !important;
+        }
+      }
     </style>
 
     <script
@@ -99,7 +158,7 @@
   </head>
 
   <body>
-    <div class="sidebar" id="sidebar">
+    <div class="sidebar text-center" id="sidebar">
       <h5 class="success">Group Name</h5>
     </div>
     <div
@@ -113,14 +172,14 @@
       style="display: none"
     ></div>
     <!-- Button trigger modal -->
-    <button
-      type="button"
-      class="btn btn-dark float-end mt-1 me-1"
-      data-bs-toggle="modal"
-      data-bs-target="#exampleModal"
-    >
-      Create Group
-    </button>
+    <!-- <button
+        type="button"
+        class="btn btn-dark float-end mt-1 me-1"
+        data-bs-toggle="modal"
+        data-bs-target="#exampleModal"
+      >
+        Create Group
+      </button> -->
 
     <!-- Modal -->
     <div
@@ -169,13 +228,91 @@
         </div>
       </div>
     </div>
+    <!-- <nav class="navbar navbar-success bg-success2 navbar-expand-lg  " style="margin-left: 203px;">
+      <div class="container-fluid">
+        <div class=" justify-content-center">
+          <p class="navbar-brand mt-3 text-white text-center" href="#">Chat App</p>
+
+        </div>
+          <div class="d-flex flex-row-reverse">
+            <button
+            type="button"
+            class="btn btn-dark "
+            data-bs-toggle="modal"
+            data-bs-target="#exampleModal"
+          >
+            Create Group
+          </button>
+          </div>
+      </div>
+    </nav> -->
+
+    <nav
+      class="navbar navbar-success bg-success2 navbar-expand-lg"
+      style="margin-left: 203px"
+    >
+      <div class="container-fluid">
+        <p class="navbar-brand fs-3">Chat App</p>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarTogglerDemo02"
+          aria-controls="navbarTogglerDemo02"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <button id="show-user" class="ms-2 btn nav-link text-dark">
+                show User
+              </button>
+            </li>
+            <li class="nav-item">
+              <button
+                type="button"
+                class="btn nav-link ms-1 text-dark"
+                data-bs-toggle="modal"
+                data-bs-target="#staticBackdrop"
+                id="add-user-to-modal"
+                style="display: none"
+              >
+                Add User
+              </button>
+            </li>
+          </ul>
+          <form class="d-flex" id="search-form">
+            <input
+              class="form-control mr-sm-2"
+              type="search"
+              name="search"
+              id="searchname"
+            />
+            <button
+              class="btn btn-outline-success my-2 my-sm-0"
+              type="submit"
+              id="search-para"
+            >
+              Search
+            </button>
+          </form>
+          <!-- <form class="d-flex">
+            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-success" type="submit">Search</button>
+          </form> -->
+        </div>
+      </div>
+    </nav>
 
     <div class="row">
       <div class="col-lg-9">
         <div class="d-flex justify-content-center">
           <div class="card w-50">
-            <div class="card-body" id="chat-container">
-              <h5 class="card-title text-center">Chat App</h5>
+            <div class="card-body p-0" id="chat-container">
+              <!-- <h5 class="card-title text-center">Chat App</h5> -->
             </div>
           </div>
         </div>
@@ -186,10 +323,10 @@
             <div class="card-body" id="user-container">
               <div class="container d-flex">
                 <h5 class="card-title">Group User</h5>
-                <button id="show-user" class="ms-2 btn btn-info">
+                <!-- <button id="show-user" class="ms-2 btn btn-info">
                   show User
-                </button>
-                <button
+                </button> -->
+                <!-- <button
                   type="button"
                   class="btn btn-primary ms-1"
                   data-bs-toggle="modal"
@@ -198,10 +335,10 @@
                   style="display: none"
                 >
                   Add User
-                </button>
+                </button> -->
               </div>
-              <nav class="navbar navbar-light bg-light">
-                <form class="d-flex" id="search-form">
+              <nav class="">
+                <!-- <form class="d-flex" id="search-form">
                   <input
                     class="form-control mr-sm-2"
                     type="search"
@@ -215,7 +352,7 @@
                   >
                     Search
                   </button>
-                </form>
+                </form> -->
               </nav>
               <div class="user-data" id="user-data"></div>
             </div>
@@ -280,23 +417,30 @@
         </div>
       </div>
     </div>
-    <div class="container bg-info fixed-bottom w-50">
-      <div class="card bg-info">
+    <div
+      class="bg-info2 w-50 ps-0"
+      style="margin-left: 204px; position: fixed; bottom: 0; left: 204px"
+    >
+      <div class="card bg-info2 justify-content-end">
         <form method="post" enctype="multipart/form-data" id="myform">
           <div class="card-body">
-            <div class="input-group mb-3">
+            <!-- <div class="input-group mb-3">
               <input
                 type="file"
                 class="form-control"
                 id="fileimage"
                 name="image"
               />
-            </div>
-            <!-- <div class="mb-3"> -->
+
+            </div> -->
+            <label for="images" class="drop-container">
+              <input type="file" id="fileimage" name="image" accept="image/*" />
+            </label>
             <label for="info">Please enter your message</label>
             <input type="text" class="form-control" id="message" />
-            <!-- </div> -->
-            <button type="submit" class="btn btn-dark" id="msg">Send</button>
+            <button type="submit" class="btn btn-dark mt-1" id="msg">
+              Send Message
+            </button>
           </div>
         </form>
       </div>
@@ -357,6 +501,7 @@
           anchor.href = "http://52.198.194.209:3000/group?id=" + item.groupId;
           //+","+ item.name;
           anchor.innerText = item.group.name;
+          anchor.className = "ps-0";
           sidebar.append(anchor);
         }
 
@@ -364,8 +509,8 @@
           const sidebar = document.getElementById("sidebar");
           const norecord = document.createElement("p");
           //+","+ item.name;
-          norecord.className = "text-dark";
-          norecord.innerText = "No Group Found";
+          norecord.className = "text-dark  fs-3 ";
+          norecord.innerText = "No Record Found";
           sidebar.append(norecord);
         }
 
