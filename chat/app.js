@@ -62,6 +62,11 @@ io.on("connection", (socket) => {
     socket.emit("reciever-message", message, room);
   });
 });
+
+cron.schedule("59 23 * * *", function () {
+  console.log("---------------------");
+  console.log("Running Cron Job");
+});
 const port = 3000;
 User.hasMany;
 sequelize
